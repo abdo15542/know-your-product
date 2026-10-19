@@ -43,8 +43,9 @@ jobs:
           p = Path('android/app/src/main/AndroidManifest.xml')
           s = p.read_text()
           marker = '    <application'
+          permission = '    <uses-permission android:name="android.permission.CAMERA" />'
           if 'android.permission.CAMERA' not in s:
-              s = s.replace(marker, '    <uses-permission android:name="android.permission.CAMERA" />\\n' + marker, 1)
+              s = s.replace(marker, permission + chr(10) + marker, 1)
           p.write_text(s)
           PY
       - name: Sync web assets
