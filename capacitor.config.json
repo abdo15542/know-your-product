@@ -1,0 +1,12 @@
+{
+  "appId": "ly.knowproduct.app",
+  "appName": "اعرف منتجك",
+  "webDir": "public",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
