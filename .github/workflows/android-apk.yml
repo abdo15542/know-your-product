@@ -37,7 +37,16 @@ jobs:
       - name: Generate Android project
         run: npx cap add android
       - name: Declare camera permission for barcode scanning
-        run: sed -i '/<application/i\\    <uses-permission android:name="android.permission.CAMERA" />' android/app/src/main/AndroidManifest.xml
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('android/app/src/main/AndroidManifest.xml')
+          s = p.read_text()
+          marker = '    <application'
+          if 'android.permission.CAMERA' not in s:
+              s = s.replace(marker, '    <uses-permission android:name="android.permission.CAMERA" />\\n' + marker, 1)
+          p.write_text(s)
+          PY
       - name: Sync web assets
         run: npx cap sync android
       - name: Build debug APK
