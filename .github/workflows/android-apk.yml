@@ -1,41 +1,62 @@
 name: Build Android APK
+
 on:
   workflow_dispatch:
   push:
     branches: [main, master]
-    paths:
-      - 'public/**'
-      - 'server.js'
-      - 'package.json'
-      - 'capacitor.config.json'
-      - '.github/workflows/android-apk.yml'
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-apk-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-apk:
+    name: Test and build Android APK
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+    timeout-minutes: 35
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+
       - name: Check JavaScript syntax
         run: npm run check
+
       - name: Run API tests
         run: npm test
+
+      - name: Validate app manifest
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('capacitor.config.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('public/manifest.webmanifest','utf8'))"
+
       - name: Generate Android project
         run: npx cap add android
+
       - name: Declare camera permission for barcode scanning
         run: |
           python - <<'PY'
@@ -45,17 +66,30 @@ jobs:
           marker = '    <application'
           permission = '    <uses-permission android:name="android.permission.CAMERA" />'
           if 'android.permission.CAMERA' not in s:
+              if marker not in s:
+                  raise SystemExit('Could not find Android application manifest marker')
               s = s.replace(marker, permission + chr(10) + marker, 1)
           p.write_text(s)
           PY
+
       - name: Sync web assets
         run: npx cap sync android
+
       - name: Build debug APK
         working-directory: android
-        run: ./gradlew assembleDebug
+        run: ./gradlew --no-daemon --stacktrace assembleDebug
+
+      - name: Create APK checksum
+        run: |
+          cd android/app/build/outputs/apk/debug
+          sha256sum app-debug.apk > app-debug.apk.sha256
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: know-your-product-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/app/build/outputs/apk/debug/app-debug.apk.sha256
           if-no-files-found: error
+          retention-days: 14
