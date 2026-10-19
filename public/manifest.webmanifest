@@ -7,5 +7,13 @@
   "display": "standalone",
   "background_color": "#f6faf7",
   "theme_color": "#087f5b",
-  "description": "البحث عن معلومات المنتجات ومكوناتها من مصادر مفتوحة"
+  "description": "البحث عن معلومات المنتجات ومكوناتها من مصادر مفتوحة",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
