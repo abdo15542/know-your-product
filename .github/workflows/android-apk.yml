@@ -36,6 +36,8 @@ jobs:
         run: npm test
       - name: Generate Android project
         run: npx cap add android
+      - name: Declare camera permission for barcode scanning
+        run: sed -i '/<application/i\\    <uses-permission android:name="android.permission.CAMERA" />' android/app/src/main/AndroidManifest.xml
       - name: Sync web assets
         run: npx cap sync android
       - name: Build debug APK
