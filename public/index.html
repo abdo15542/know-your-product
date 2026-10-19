@@ -4,17 +4,17 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#087f5b"><meta name="description" content="اعرف منتجك: ابحث عن معلومات المنتجات ومكوناتها وباركودها من مصادر مفتوحة.">
 <title>اعرف منتجك</title><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css">
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script><script src="app.js" defer></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script><script src="app.js" defer></script>
 </head>
 <body>
 <header class="top"><div class="brandmark">✳</div><div><h1>اعرف منتجك</h1><p>معلومات أوضح عن المنتجات التي تستخدمها</p></div><span class="top-leaf">✦</span></header>
 <main>
 <section class="hero"><div class="eyebrow">دليلك الذكي للمنتجات</div><h2>اعرف ما الذي<br><span>تستخدمه يوميًا</span></h2><p>ابحث عن المنتج بالاسم أو امسح الباركود لمعرفة البيانات المتاحة والمكونات والتحذيرات المسجلة.</p><div class="hero-note"><span>✓</span> مصادر مفتوحة · توضيح مصدر البيانات · بلا ادعاءات طبية</div></section>
 <section class="search-card" id="lookup"><div class="section-head"><div><span class="eyebrow">ابدأ البحث</span><h2>كيف تريد البحث؟</h2></div><span class="sparkle">✧</span></div>
-<div class="tabs" role="tablist"><button class="tab active" data-tab="name" role="tab" aria-selected="true">⌕ الاسم</button><button class="tab" data-tab="barcode" role="tab" aria-selected="false">▦ الباركود</button></div>
+<div class="tabs" role="tablist"><button class="tab active" data-tab="name" role="tab" aria-selected="true">⌕ الاسم</button><button class="tab" data-tab="barcode" role="tab" aria-selected="false">▦ الباركود</button><button class="tab" data-tab="photo" role="tab" aria-selected="false">▧ صورة</button></div>
 <form id="nameForm" class="search-form"><label for="nameInput">اسم المنتج أو العلامة التجارية</label><div class="input-row"><input id="nameInput" placeholder="مثال: shampoo أو معجون أسنان" autocomplete="off" required><button class="primary" type="submit">ابحث</button></div></form>
 <form id="barcodeForm" class="search-form hidden"><label for="barcodeInput">رقم الباركود (8 إلى 14 رقمًا)</label><div class="input-row"><input id="barcodeInput" inputmode="numeric" pattern="[0-9]{8,14}" placeholder="أدخل رقم الباركود" required><button class="primary" type="submit">تحقق</button></div><button class="secondary full" type="button" id="scanButton">▦ فتح الكاميرا لمسح الباركود</button><div id="reader" class="hidden"></div></form>
-<div id="statusMessage" class="status hidden" role="status" aria-live="polite"></div>
+<form id="photoForm" class="search-form hidden"><label for="photoInput">صورة واضحة لاسم المنتج أو مكوناته</label><input id="photoInput" type="file" accept="image/*" capture="environment"><button class="primary full" type="submit">استخراج النص من الصورة</button><p class="fineprint">تتم قراءة النص في المتصفح، وقد يخطئ OCR. راجع النص المستخرج قبل البحث.</p></form><div id="statusMessage" class="status hidden" role="status" aria-live="polite"></div>
 </section>
 <section id="resultsSection" class="results hidden"><div class="section-head"><div><span class="eyebrow">نتيجة البحث</span><h2 id="resultsTitle">المنتجات</h2></div><button id="resetButton" class="text-btn">بحث جديد ↻</button></div><div id="resultsGrid" class="results-grid"></div><div id="detailSection" class="hidden"></div></section>
 <section class="trust-grid"><article><span class="trust-icon">⌕</span><h3>بحث سريع</h3><p>ابحث بالاسم أو رقم الباركود.</p></article><article><span class="trust-icon">◎</span><h3>مصدر واضح</h3><p>روابط المصادر المفتوحة ظاهرة في التفاصيل.</p></article><article><span class="trust-icon">!</span><h3>وعي وسلامة</h3><p>تحقق من العبوة الأصلية ولا تعتمد على البيانات وحدها.</p></article></section>
