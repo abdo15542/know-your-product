@@ -35,8 +35,8 @@ app.get('/api/product/:barcode',async(req,res)=>{
   const code=req.params.barcode;
   if(!/^\d{8,14}$/.test(code))return res.status(400).json({error:'الباركود يجب أن يتكون من 8 إلى 14 رقمًا.'});
   if(dbEnabled){
-    const result=await pool.query('SELECT payload FROM products WHERE barcode=$1 LIMIT 1',[code]);
-    if(result.rowCount)return res.json(result.rows[0].payload);
+    const result=await pool.query('SELECT payload,source,source_url FROM products WHERE barcode=$1 LIMIT 1',[code]);
+    if(result.rowCount)return res.json({...result.rows[0].payload,source:result.rows[0].source,source_url:result.rows[0].source_url});
   }else{
     const local=await readJson('products.json',[]);
     const match=local.find(p=>String(p.barcode)===code);
@@ -51,13 +51,13 @@ app.get('/api/search',async(req,res)=>{
   const limit=Math.min(30,Math.max(1,Number.parseInt(String(req.query.limit||'20'),10)||20));
   if(dbEnabled){
     const result=await pool.query(
-      `SELECT payload FROM products
+      `SELECT payload,source,source_url FROM products
        WHERE name ILIKE $1 OR brand ILIKE $1 OR barcode=$2
        ORDER BY CASE WHEN barcode=$2 THEN 0 ELSE 1 END, imported_at DESC
        LIMIT $3`,
       ['%'+q+'%',q,limit]
     );
-    return res.json({results:result.rows.map(row=>row.payload),count:result.rowCount,storage:'postgresql'});
+    return res.json({results:result.rows.map(row=>({...row.payload,source:row.source,source_url:row.source_url})),count:result.rowCount,storage:'postgresql'});
   }
   const list=await readJson('products.json',[]);
   const words=q.toLocaleLowerCase().split(/\s+/);
