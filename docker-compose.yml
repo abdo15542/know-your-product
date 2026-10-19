@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     environment:
       PORT: 3000
-      DATABASE_URL: postgres://productapp:${POSTGRES_PASSWORD:-change-this-password}@db:5432/knowproduct
+      DATABASE_URL: postgres://productapp:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/knowproduct
       PGSSLMODE: disable
     ports:
       - "${PORT:-3000}:3000"
