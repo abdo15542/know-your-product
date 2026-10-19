@@ -1,0 +1,29 @@
+{
+  "name": "know-your-product",
+  "version": "1.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Arabic-first product lookup web app and Android app",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check public/app.js",
+    "test": "node --test",
+    "build:android": "npx cap sync android"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.4.3",
+    "compression": "^1.7.4",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/cli": "^7.4.3"
+  }
+}
