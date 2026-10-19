@@ -6,7 +6,7 @@
   "description": "Arabic-first product lookup web app and Android app",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check server.js && node --check public/app.js",
+    "check": "node --check server.js && node --check database.js && node --check public/app.js && node --check scripts/import-products.js",
     "test": "node --test",
     "build:android": "npx cap sync android",
     "import:products": "node scripts/import-products.js"
