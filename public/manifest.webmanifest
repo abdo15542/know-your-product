@@ -1,0 +1,11 @@
+{
+  "name": "اعرف منتجك",
+  "short_name": "اعرف منتجك",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6faf7",
+  "theme_color": "#087f5b",
+  "description": "البحث عن معلومات المنتجات ومكوناتها من مصادر مفتوحة"
+}
