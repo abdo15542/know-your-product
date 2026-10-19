@@ -1,0 +1,7 @@
+node_modules/
+android/
+.git/
+.github/
+.env
+*.log
+data/*.json
