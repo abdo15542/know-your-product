@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import fs from 'node:fs/promises';
+import { createReadStream } from 'node:fs';
 import readline from 'node:readline';
 import pg from 'pg';
 
@@ -7,7 +8,7 @@ const file=process.argv[2];
 if(!file){console.error('Usage: npm run import:products -- /path/to/products.jsonl');process.exit(2)}
 if(!process.env.DATABASE_URL){console.error('Set DATABASE_URL to a PostgreSQL database before importing.');process.exit(2)}
 const pool=new pg.Pool({connectionString:process.env.DATABASE_URL,ssl:process.env.PGSSLMODE==='require'?{rejectUnauthorized:process.env.PGSSL_REJECT_UNAUTHORIZED!=='false'}:undefined});
-const input=readline.createInterface({input:fs.createReadStream(file,{encoding:'utf8'}),crlfDelay:Infinity});
+const input=readline.createInterface({input:createReadStream(file,{encoding:'utf8'}),crlfDelay:Infinity});
 let seen=0,stored=0,skipped=0;
 try{
   await pool.query(await fs.readFile(new URL('../database/schema.sql',import.meta.url),'utf8'));
